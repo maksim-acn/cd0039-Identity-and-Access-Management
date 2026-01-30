@@ -1,0 +1,29 @@
+# Use an official Node.js runtime as the base image
+FROM node:14-alpine
+
+# Set the working directory
+WORKDIR /app
+
+# Copy package files
+COPY frontend/package*.json ./
+
+# Install dependencies
+RUN npm install
+
+# Copy the frontend source code
+COPY frontend/ .
+
+# Build the Ionic app
+RUN npm run build -- --prod
+
+# Use nginx to serve the built app
+FROM nginx:alpine
+
+# Copy the built app from the previous stage
+COPY --from=0 /app/www /usr/share/nginx/html
+
+# Expose the port the app runs on
+EXPOSE 80
+
+# Start nginx
+CMD ["nginx", "-g", "daemon off;"]

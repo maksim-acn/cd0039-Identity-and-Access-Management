@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    container_name: coffee-shop-backend
+    environment:
+      - FLASK_APP=src.api
+      - FLASK_ENV=development
+      - AUTH0_DOMAIN=${AUTH0_DOMAIN}
+      - AUTH0_ALGORITHMS=${AUTH0_ALGORITHMS}
+      - AUTH0_API_AUDIENCE=${AUTH0_API_AUDIENCE}
+      - FLASK_PORT=${FLASK_PORT}
+    ports:
+      - "5001:5000"
+    volumes:
+      - ./backend/src:/app/src
+      - ./backend/src/database/database.db:/app/src/database/database.db
+    networks:
+      - coffee-shop-network
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    container_name: coffee-shop-frontend
+    ports:
+      - "8100:80"
+    networks:
+      - coffee-shop-network
+    depends_on:
+      - backend
+
+networks:
+  coffee-shop-network:
+    driver: bridge

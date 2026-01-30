@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  apiServerUrl: 'http://127.0.0.1:5000', // the running FLASK api server url
+  apiServerUrl: 'http://backend:5000', // Backend service name in Docker network
   auth0: {
     url: 'dev-biseljjjloqgmufv.us.auth0.com', // the auth0 domain prefix (without .auth0.com)
     audience: 'dev', // the audience set for the auth0 app

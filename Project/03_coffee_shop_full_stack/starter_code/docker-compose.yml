@@ -14,7 +14,7 @@ services:
       - AUTH0_API_AUDIENCE=${AUTH0_API_AUDIENCE}
       - FLASK_PORT=${FLASK_PORT}
     ports:
-      - "5000:5000"
+      - "5001:5000"
     volumes:
       - ./backend/src:/app/src
       - ./backend/src/database/database.db:/app/src/database/database.db

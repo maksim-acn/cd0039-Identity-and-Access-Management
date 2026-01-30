@@ -7,6 +7,12 @@ WORKDIR /app
 # Copy the requirements file
 COPY backend/requirements.txt .
 
+# Install build dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    gcc \
+    libc6-dev \
+    && rm -rf /var/lib/apt/lists/*
+
 # Install dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
@@ -20,4 +26,4 @@ COPY backend/.env .
 EXPOSE 5000
 
 # Run the application
-CMD ["python", "-m", "src.api"]
+CMD ["python", "-m", "src"]

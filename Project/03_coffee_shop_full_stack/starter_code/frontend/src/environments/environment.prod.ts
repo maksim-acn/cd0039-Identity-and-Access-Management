@@ -1,3 +1,10 @@
 export const environment = {
-  production: true
+  production: true,
+  apiServerUrl: 'http://backend:5000', // Backend service name in Docker network
+  auth0: {
+    url: 'dev-biseljjjloqgmufv.us.auth0.com', // the auth0 domain prefix (without .auth0.com)
+    audience: 'dev', // the audience set for the auth0 app
+    clientId: '7leSthHeQWR43WD169aYgjTK0CiyNvH7', // the client id generated for the auth0 app
+    callbackURL: 'http://localhost:8100', // the base url of the running ionic application. 
+  }
 };

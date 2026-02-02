@@ -84,13 +84,18 @@ This spec addresses the issues raised in docs/Review-01.md for the Coffee Shop F
 ---
 
 ## Current Findings (from local scan)
-1. **Request-level auth override exists** in the barista POST request: [Project/03_coffee_shop_full_stack/starter_code/backend/udacity-fsnd-udaspicelatte.postman_collection.json](Project/03_coffee_shop_full_stack/starter_code/backend/udacity-fsnd-udaspicelatte.postman_collection.json#L256-L280)
-2. **Folder-level tokens** for both `barista` and `manager` use the default Udacity issuer: [barista token](Project/03_coffee_shop_full_stack/starter_code/backend/udacity-fsnd-udaspicelatte.postman_collection.json#L350-L371), [manager token](Project/03_coffee_shop_full_stack/starter_code/backend/udacity-fsnd-udaspicelatte.postman_collection.json#L582-L602)
-
+1. **Request-level auth override removed** — the barista POST request no longer contains a request-level `auth` block and will inherit folder-level auth. (Updated in `starter_code/backend/udacity-fsnd-udaspicelatte.postman_collection.json`)
+2. **Folder-level tokens replaced with placeholders** — both `barista` and `manager` folder-level bearer tokens are now placeholders (`<PASTE_BARISTA_JWT_HERE>` / `<PASTE_MANAGER_JWT_HERE>`) to prevent shipping default/expired tokens in the repo.
+3. **Auth ALGORITHMS parsing hardened** — `src/auth/auth.py` now robustly parses the `ALGORITHMS` env var (handles bare strings, lists and malformed values) and logs a warning if `AUTH0_DOMAIN` or `API_AUDIENCE` are not configured.
 ---
 
 ## Next Steps (Do These in Order)
-1. **Remove request-level auth override** for the barista POST request so it inherits folder auth.
-2. **Replace folder-level tokens** with fresh JWTs from your Auth0 tenant for both barista and manager.
-3. **Re-export the Postman collection** to the same backend path so the file includes the updated tokens only at the folder level.
-4. **Re-run Postman tests** for public/barista/manager to confirm expected 200/401/403 behavior.
+1. **Done:** Request-level auth override removed (barista POST now inherits folder-level auth).
+2. **Done:** Folder-level bearer token values replaced with placeholders to avoid shipping default/expired tokens.
+3. **Action:** Paste fresh, tenant-issued JWTs into the `barista` and `manager` folder Authorization Token fields in Postman (folder-level only). Then export/overwrite `starter_code/backend/udacity-fsnd-udaspicelatte.postman_collection.json` with these valid tokens.
+4. **Action:** Ensure your backend `.env` contains *plain* values (no brackets/quotes):
+   - `ALGORITHMS=RS256`
+   - `AUTH0_DOMAIN=<your-tenant>.auth0.com`
+   - `API_AUDIENCE=<your-api-identifier>`
+   Restart the Flask server so env vars are loaded.
+5. **Action:** Re-run Postman tests for `public`, `barista`, and `manager` to confirm expected 200/401/403 behavior. Report results and any failing endpoints so I can help debug further.

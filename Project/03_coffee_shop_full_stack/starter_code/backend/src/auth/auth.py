@@ -1,4 +1,5 @@
 import os
+import ast
 import json
 from flask import request, _request_ctx_stack
 from functools import wraps
@@ -10,8 +11,21 @@ from dotenv import load_dotenv
 load_dotenv()
 
 AUTH0_DOMAIN = os.getenv('AUTH0_DOMAIN')
-ALGORITHMS = os.getenv('ALGORITHMS', 'RS256').split(',')
+_raw_alg = os.getenv('ALGORITHMS', 'RS256')
+try:
+    _parsed_alg = ast.literal_eval(_raw_alg)
+except Exception:
+    _parsed_alg = _raw_alg
+if isinstance(_parsed_alg, str):
+    ALGORITHMS = [s.strip() for s in _parsed_alg.split(',') if s.strip()]
+elif isinstance(_parsed_alg, (list, tuple)):
+    ALGORITHMS = [str(s).strip().strip('\"\'') for s in _parsed_alg]
+else:
+    ALGORITHMS = ['RS256']
 API_AUDIENCE = os.getenv('API_AUDIENCE')
+import logging
+if not AUTH0_DOMAIN or not API_AUDIENCE:
+    logging.warning("AUTH0_DOMAIN or API_AUDIENCE not set. Some operations may fail until configured.")
 
 ## AuthError Exception
 '''
